@@ -1,0 +1,120 @@
+println "Applying x10-library to $project"
+
+repositories {
+    jcenter()
+}
+
+android {
+    lintOptions {
+        quiet false
+        abortOnError true
+        ignoreWarnings false
+        absolutePaths true
+        // if true, check all issues, including those that are off by default
+        checkAllWarnings true
+        // if true, treat all warnings as errors
+        warningsAsErrors true
+        // turn off checking the given issue id's
+        disable 'TypographyFractions','TypographyQuotes'
+        // turn on the given issue id's
+        enable 'RtlHardcoded','RtlCompat', 'RtlEnabled'
+        // check *only* the given issue id's
+        check 'NewApi', 'InlinedApi'
+        // if true, don't include source code lines in the error output
+        noLines true
+        // if true, show all locations for an error, do not truncate lists, etc.
+        showAll true
+        textReport true
+        // location to write the output; can be a file or 'stdout'
+        textOutput 'stdout'
+        // if true, generate an XML report for use by for example Jenkins
+        xmlReport false
+        // file to write report to (if not specified, defaults to lint-results.xml)
+        xmlOutput file("$project.buildDir/lint/lint-results.xml")
+        // if true, generate an HTML report (with issue explanations, sourcecode, etc)
+        htmlReport true
+        // optional path to report (default will be lint-results.html in the builddir)
+        htmlOutput file("$project.buildDir/lint/lint-results.html")
+
+        // set to true to have all release builds run lint on issues with severity=fatal
+        // and abort the build (controlled by abortOnError above) if fatal issues are found
+        checkReleaseBuilds true
+        // Set the severity of the given issues to fatal (which means they will be
+        // checked during release builds (even if the lint target is not included)
+        fatal 'NewApi'
+        // Set the severity of the given issues to error
+        error 'Wakelock', 'TextViewEdits'
+        // Set the severity of the given issues to warning
+        warning 'ResourceAsColor'
+        // Set the severity of the given issues to ignore (same as disabling the check)
+        ignore 'TypographyQuotes'
+    }
+}
+
+// Findbug
+apply plugin: 'findbugs'
+task findbugs(type: FindBugs) {
+    effort = "max"
+    reportLevel = "low"
+    ignoreFailures = false
+    excludeFilter = new File("${project.rootDir}/findbugs/findbugs-filter.xml")
+    classes = files("${project.rootDir}/app/build/intermediates/classes")
+    source = fileTree('src/main/java/')
+    classpath = files()
+    reports {
+        xml.enabled = false
+        html.enabled = true
+        xml {
+            destination "$project.buildDir/findbugs/findbugs-results.xml"
+        }
+        html {
+            destination "$project.buildDir/findbugs/findbugs-results.html"
+        }
+    }
+}
+
+// Checkstyle
+apply plugin: 'checkstyle'
+tasks.withType(Checkstyle) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+
+// JDepend
+apply plugin: 'jdepend'
+task jdepend(type: JDepend, dependsOn: 'compileDebugSources') {
+    classesDir file("${project.rootDir}/app/build/intermediates/classes")
+    reports {
+        xml {
+            destination "$project.buildDir/jdepend/jdepend-results.xml"
+        }
+    }
+}
+
+// PMD
+apply plugin: 'pmd'
+pmd {
+    ruleSets = ["basic", "braces", "design"]
+    ignoreFailures = true
+}
+
+// Javadoc
+android.libraryVariants.all { variant ->
+    def name = variant.name
+    task "javadoc$name"(type: Javadoc) {
+        failOnError = true
+        description = "Generates javadoc for build $name"
+        destinationDir = new File(destinationDir, variant.baseName)
+        classpath = files(variant.javaCompile.classpath)
+        source = files(variant.javaCompile.source)
+        include '**/*.java'
+        exclude '**/generated/**/*.java'
+    }
+}
+
+// Project report
+// apply plugin: 'project-report'
+
+

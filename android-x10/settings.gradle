@@ -1,1 +1,11 @@
-include ':app', ':x10'
+include ':app',
+        ':x10',
+        ':x10-base',
+        ':x10-bitmap',
+        ':x10-media',
+        ':x10-email',
+        ':x10-file',
+        ':x10-threading',
+        ':x10-inputdevice',
+        ':x10-incubation',
+        ':x10-time'

@@ -1,7 +1,5 @@
 # Created by https://www.gitignore.io/api/android studio,gradle
 
-#!! ERROR: android studio is undefined. Use list command to see defined gitignore types !!#
-
 ### Gradle ###
 .gradle
 build/
@@ -79,4 +77,5 @@ fabric.properties
 ### Intellij Patch ###
 *.iml
 
-
+### OSX ###
+*.DS_Store

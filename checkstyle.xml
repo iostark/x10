@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+"-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+"http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+
+<module name="Checker">
+        <module name="JavadocPackage"/>
+
+		<module name="TreeWalker">
+			<!--<property name="cacheFile" value="${checkstyle.cache.file}"/>-->
+
+			<!-- Checks for Javadoc comments.                     -->
+			<!-- See http://checkstyle.sf.net/config_javadoc.html -->
+			<module name="JavadocMethod">
+				<property name="scope" value="protected"/>
+				<property name="excludeScope" value="private"/>
+			</module>
+
+			<module name="JavadocStyle">
+				<property name="scope" value="protected"/>
+			</module>
+
+			<module name="JavadocType">
+				<property name="scope" value="protected"/>
+				<property name="excludeScope" value="private"/>
+			</module>
+
+			<module name="JavadocVariable">
+				<property name="scope" value="protected"/>
+				<property name="excludeScope" value="protected"/>
+			</module>
+
+		<module name="RegexpSinglelineJava">
+			<property name="format" value="\* @since V[0-9]*_[0-9]*_[0-9]*"/>
+			<property name="message" value="Missing @since attribute"/>
+			<property name="minimum" value="0"/>
+			<property name="maximum" value="99999"/>
+			<property name="ignoreCase" value="false"/>
+			<property name="ignoreComments" value="false"/>
+		</module>
+
+
+		</module>
+	</module>

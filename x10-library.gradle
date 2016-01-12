@@ -1,0 +1,362 @@
+println "Applying x10-library to $project"
+
+//apply plugin: 'com.getkeepsafe.dexcount'
+
+repositories {
+    jcenter()
+}
+
+def reportsDir = "${project.buildDir}/reports"
+
+if (project.name.contains("x10-base")) {
+    dependencies {
+        compile(project.dependencyFindbugsAnnotations) {
+            exclude group: 'net.jcip', module: 'jcip-annotations'
+            exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+
+        androidTestCompile(project.dependencyComAndroidSupportTestRules) {}
+
+        androidTestCompile(project.dependencyComAndroidSupportTestExpressoExpressoIntents) {
+            exclude group: 'com.android.support', module: 'support-annotations'
+            exclude group: 'com.google.code.findbugs', module: 'annotations'
+            exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+
+        androidTestCompile(project.dependencyComAndroidSupportAppCompatv7) {
+            exclude group: 'com.android.support', module: 'support-annotations'
+            exclude group: 'com.google.code.findbugs', module: 'annotations'
+            exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+        androidTestCompile(project.dependencyComAndroidSupportTestExpressoExpressoCore) {
+            exclude group: 'com.android.support', module: 'support-annotations'
+            exclude group: 'com.google.code.findbugs', module: 'annotations'
+            exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+        androidTestCompile(project.dependencyComAndroidSupportTestUIAutomatorUIAutomator)
+        androidTestCompile(project.dependencyComAndroidSupportTestRunner)
+        androidTestCompile('com.schibsted.spain:barista:0.0.1') {
+            exclude group: 'com.android.support', module: 'support-annotations'
+            exclude group: 'com.google.code.findbugs', module: 'annotations'
+            exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+    }
+} else {
+    dependencies {
+        compile(project(':x10-base')) {
+
+        }
+
+        androidTestCompile(project.dependencyComAndroidSupportTestRules) {}
+
+        androidTestCompile(project.dependencyComAndroidSupportTestExpressoExpressoIntents) {
+            transitive = false
+            exclude group: 'com.android.support', module: 'support-annotations'
+            exclude group: 'com.google.code.findbugs', module: 'annotations'
+            exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+
+        androidTestCompile(project.dependencyComAndroidSupportAppCompatv7) {
+            exclude group: 'com.android.support', module: 'support-annotations'
+            exclude group: 'com.google.code.findbugs', module: 'annotations'
+            exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+        androidTestCompile(project.dependencyComAndroidSupportTestExpressoExpressoCore) {
+            exclude group: 'com.android.support', module: 'support-annotations'
+            exclude group: 'com.google.code.findbugs', module: 'annotations'
+            exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+        androidTestCompile(project.dependencyComAndroidSupportTestUIAutomatorUIAutomator)
+        androidTestCompile(project.dependencyComAndroidSupportTestRunner)
+        androidTestCompile('com.schibsted.spain:barista:0.0.1') {
+            exclude group: 'com.android.support', module: 'support-annotations'
+            exclude group: 'com.google.code.findbugs', module: 'annotations'
+            exclude group: 'com.google.code.findbugs', module: 'jsr305'
+        }
+    }
+}
+
+// Android
+android {
+    lintOptions {
+        quiet false
+        abortOnError true
+        ignoreWarnings false
+        absolutePaths true
+        // if true, check all issues, including those that are off by default
+        checkAllWarnings true
+        // if true, treat all warnings as errors
+        warningsAsErrors true
+        // turn off checking the given issue id's
+        disable 'TypographyFractions', 'TypographyQuotes'
+        // turn on the given issue id's
+        enable 'RtlHardcoded', 'RtlCompat', 'RtlEnabled'
+        // check *only* the given issue id's
+        check 'NewApi', 'InlinedApi'
+        // if true, don't include source code lines in the error output
+        noLines true
+        // if true, show all locations for an error, do not truncate lists, etc.
+        showAll true
+        textReport false
+
+        xmlReport project.isCIBuild
+        htmlReport !project.isCIBuild
+
+        xmlOutput file("$reportsDir/lint/lint-results.xml")
+        htmlOutput file("$reportsDir/lint/lint-results.html")
+
+        // set to true to have all release builds run lint on issues with severity=fatal
+        // and abort the build (controlled by abortOnError above) if fatal issues are found
+        checkReleaseBuilds true
+        // Set the severity of the given issues to fatal (which means they will be
+        // checked during release builds (even if the lint target is not included)
+        fatal 'NewApi'
+        // Set the severity of the given issues to error
+        error 'Wakelock', 'TextViewEdits'
+        // Set the severity of the given issues to warning
+        warning 'ResourceAsColor'
+        // Set the severity of the given issues to ignore (same as disabling the check)
+        ignore 'TypographyQuotes'
+    }
+    buildTypes {
+        debug {
+            minifyEnabled project.isCIBuild
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            proguardFiles "$project.x10LibraryProguardRuleFilePath"
+            proguardFiles "$project.x10FindbugsAnnotatonsProguardRuleFilePath"
+            proguardFiles "$project.x10FindbugsAnnotatonsProguardRuleFilePath"
+            proguardFiles "$projectDir/proguard-rules.pro"
+
+            testCoverageEnabled true
+        }
+        release {
+            minifyEnabled project.isCIBuild
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            proguardFiles "$project.x10LibraryProguardRuleFilePath"
+            proguardFiles "$project.x10FindbugsAnnotatonsProguardRuleFilePath"
+            proguardFiles "$projectDir/proguard-rules.pro"
+
+            testCoverageEnabled true
+        }
+    }
+    testOptions {
+        animationsDisabled = true
+    }
+    dexOptions{
+        javaMaxHeapSize project.isCIBuild ? "4g" : "1g"
+    }
+}
+
+/* Configure dependencies */
+android.libraryVariants.all { variant ->
+    Task task = task("check${variant.name.capitalize()}") {
+        // None
+    }
+    task.dependsOn "findbugs${variant.name.capitalize()}", "checkstyle${variant.name.capitalize()}", "jdepend${variant.name.capitalize()}", "pmd${variant.name.capitalize()}", "jacoco${variant.name.capitalize()}"
+    check.dependsOn task
+}
+// Findbugs
+apply plugin: 'findbugs'
+android.libraryVariants.all { variant ->
+    task("findbugs${variant.name.capitalize()}", type: FindBugs, dependsOn: "compile${variant.name.capitalize()}Sources") {
+        group = 'Code Quality'
+        ignoreFailures = false
+
+        effort = "max"
+        reportLevel = "low"
+
+        excludeFilter = new File("${project.rootDir}/findbugs-filter.xml")
+        classes = files("${project.buildDir}/intermediates/classes/${variant.name}")
+        source = fileTree('src/main/java/')
+
+        include '**/*.java'
+        exclude '**/gen/**'
+        exclude '**/test/**'
+        exclude '**/internal/**'
+        exclude '**/R.java'
+        exclude '**/BuildConfig.java'
+
+        classpath = files()
+        reports {
+            xml.enabled = project.isCIBuild
+            html.enabled = !project.isCIBuild
+            xml {
+                destination "$reportsDir/findbugs/findbugs.xml"
+            }
+            html {
+                destination "$reportsDir/findbugs/findbugs.html"
+            }
+        }
+    }
+}
+
+// Checkstyle
+apply plugin: 'checkstyle'
+android.libraryVariants.all { variant ->
+    task("checkstyle${variant.name.capitalize()}", type: Checkstyle) {
+        group = 'Code Quality'
+        ignoreFailures = false
+        showViolations = true
+
+        configFile file("$project.x10CheckstyleFilePath")
+
+        source 'src/main/java'
+        include '**/*.java'
+        exclude '**/gen/**'
+        exclude '**/test/**'
+        exclude '**/internal/**'
+        exclude '**/R.java'
+        exclude '**/BuildConfig.java'
+
+        // empty classpath
+        classpath = files()
+
+        reports {
+            xml.enabled = project.isCIBuild
+            html.enabled = !project.isCIBuild
+            xml {
+                destination "$reportsDir/checkstyle/checkstyle-result.xml"
+            }
+            html {
+                destination "$reportsDir/checkstyle/checkstyle-result.html"
+            }
+        }
+    }
+}
+
+// JDepend
+apply plugin: 'jdepend'
+android.libraryVariants.all { variant ->
+    task("jdepend${variant.name.capitalize()}", type: JDepend, dependsOn: "compile${variant.name.capitalize()}Sources") {
+        group = 'Code Quality'
+        classesDir file("${project.buildDir}/intermediates/classes/${variant.name}")
+
+        reports {
+            xml.enabled = project.isCIBuild
+            text.enabled = !project.isCIBuild
+
+            xml {
+                destination "$reportsDir/jdepend/jdepend-results.xml"
+            }
+            text {
+                destination "$reportsDir/jdepend/jdepend-results.txt"
+            }
+        }
+    }
+}
+
+// PMD
+apply plugin: 'pmd'
+android.libraryVariants.all { variant ->
+    task("pmd${variant.name.capitalize()}", type: Pmd) {
+        group = 'Code Quality'
+        ignoreFailures = true
+
+        ruleSets = []
+        ruleSetFiles = files("$project.rootDir/pmd-rulesets.xml")
+
+        source = fileTree('src/main/java')
+        consoleOutput = true
+
+        reports {
+            xml.enabled = project.isCIBuild
+            html.enabled = !project.isCIBuild
+
+            xml {
+                destination "$reportsDir/pmd/pmd-results.xml"
+            }
+            html {
+                destination "$reportsDir/pmd/pmd-results.html"
+            }
+        }
+    }
+}
+
+// Jacoco
+apply plugin: 'jacoco'
+android.libraryVariants.all { variant ->
+    task("jacoco${variant.name.capitalize()}", type: JacocoReport) {
+        group = 'Code Quality'
+        sourceDirectories = files(android.sourceSets.main.java.srcDirs)
+        classDirectories = files(android.sourceSets.main.java.srcDirs)
+        executionData = fileTree(dir: "$project.projectDir", includes: ['**/*.exec'])
+
+        onlyIf = { // Don't fail task if there is no test
+            true
+        }
+        reports {
+            xml.enabled = project.isCIBuild
+            html.enabled = !project.isCIBuild
+        }
+    }
+}
+
+// Javadoc
+task javadoc(type: Javadoc) {
+    description = "Generates javadoc for build $project.name"
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.compile
+    destinationDir = file("build/javadoc/")
+    options.links 'http://docs.oracle.com/javase/8/docs/api/', 'https://developer.android.com/reference/'
+    options.memberLevel = JavadocMemberLevel.PROTECTED
+
+    failOnError = false
+
+    doLast {
+        def file = new File("${x10AllSourcesForJavadocFile}_${project.name}")
+        println "FILE: $file"
+        source.forEach { file2 ->
+            println "File: $file2"
+            //file2 << "$file2"
+        }
+    }
+}
+
+// Prevent Error Prone Programming
+apply plugin: "net.ltgt.errorprone"
+
+//tasks.withType(JavaCompile) {
+//    options.compilerArgs += [ '-Xep:DeadException:WARN', '-Xep:GuardedByValidator:OFF' ]
+//}
+
+// Code Format
+apply plugin: 'com.diffplug.gradle.spotless'
+spotless {
+    java {
+        licenseHeaderFile "$project.x10LicenseFilePath"
+        importOrderFile "$project.x10ImportOrderFilePath"
+        removeUnusedImports()
+        googleJavaFormat("1.3")
+    }
+
+    format 'misc', {
+        target '**/.gitignore', '**/*.md'
+        indentWithTabs()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+
+    format 'gradle', {
+        target '**/*.gradle'
+        indentWithSpaces()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
+
+// Javadoc
+task javadocJar(type: Jar, dependsOn: "javadoc") {
+    classifier = 'javadoc'
+    from tasks["javadoc"].destinationDir
+}
+
+// Add the Javadoc jar to the project's artifacts. This will allow us to upload it easily later
+project.artifacts.add("archives", tasks["javadocJar"]);
+
+// Project report
+// apply plugin: 'project-report'
+
+// Android test reporting
+// gradle deviceCheck mergeAndroidReports --continue
+// apply plugin: 'android-reporting'

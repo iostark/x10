@@ -29,16 +29,6 @@ gradle-app.setting
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
 
-# Custom
-android-x10/.idea/.name
-android-x10/.idea/encodings.xml
-android-x10/.idea/compiler.xml
-android-x10/.idea/gradle.xml
-android-x10/.idea/misc.xml
-android-x10/.idea/modules.xml
-android-x10/.idea/runConfigurations.xml
-android-x10/.idea/copyright/
-
 # Sensitive or high-churn files:
 .idea/dataSources.ids
 .idea/dataSources.xml
@@ -48,8 +38,7 @@ android-x10/.idea/copyright/
 .idea/uiDesigner.xml
 
 # Gradle:
-.idea/gradle.xml
-.idea/libraries
+.idea/
 
 # Mongo Explorer plugin:
 .idea/mongoSettings.xml
@@ -78,4 +67,4 @@ fabric.properties
 *.iml
 
 ### OSX ###
-*.DS_Store
+local.properties

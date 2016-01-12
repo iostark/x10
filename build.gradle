@@ -1,0 +1,163 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.4.0-alpha4'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.3'
+        classpath 'net.rdrei.android.buildtimetracker:gradle-plugin:0.9.+'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+plugins {
+    id 'org.ajoberstar.grgit' version '1.6.0'
+    id "net.ltgt.errorprone" version "0.0.9"
+    id "com.vanniktech.android.junit.jacoco" version "0.6.0"
+    id "com.diffplug.gradle.spotless" version "3.1.0"
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+// Git
+apply plugin: 'org.ajoberstar.grgit'
+def repo = grgit.open('../')
+
+project.ext {
+    minSdkVersion = 19
+    compileSdkVersion = 25
+    targetSdkVersion = 25
+    buildToolsVersion = "25.0.2"
+
+    gitCommitHash = "${repo.head().id}"
+
+    // App
+    x10AppVersionCode = 1
+    x10AppVersionName = "1.0"
+    // X10
+    x10VersionCode = 1
+    x10VersionName = "1.0"
+    // X10 Base
+    x10BaseVersionCode = 1
+    x10BaseVersionName = "1.0"
+    // X10 Bitmap
+    x10BitmapVersionCode = 1
+    x10BitmapVersionName = "1.0"
+    // X10 Media
+    x10MediaVersionCode = 1
+    x10MediaVersionName = "1.0"
+    // X10 Email
+    x10EmailVersionCode = 1
+    x10EmailVersionName = "1.0"
+    // X10 File
+    x10FileVersionCode = 1
+    x10FileVersionName = "1.0"
+    // X10 Threading
+    x10ThreadingVersionCode = 1
+    x10ThreadingVersionName = "1.0"
+    // X10 Input Device
+    x10InputDeviceVersionCode = 1
+    x10InputDeviceVersionName = "1.0"
+    // X10 Incubation
+    x10IncubationVersionCode = 1
+    x10IncubationVersionName = "1.0"
+
+    // X10 Time
+    x10TimeVersionCode = 1
+    x10TimeVersionName = "1.0"
+    // X10 Permission
+    x10PermissionVersionCode = 1
+    x10PermissionVersionName = "1.0"
+    // X10 Logging
+    x10LoggingVersionCode = 1
+    x10LoggingVersionName = "1.0"
+
+    x10LibraryId = "Foobar"
+
+    x10LibraryGradle = "" + project.projectDir + "/x10-library.gradle"
+    x10AllLibraryNamesFile = "x10Libraries"
+    x10AllSourcesForJavadocFile = "/tmp/javadoc.classfiles"
+    x10AllSourcesForJavaodc = ""
+
+    x10LicenseFilePath = (new File('.').absolutePath + "/LICENSE")
+    x10ImportOrderFilePath = (new File('.').absolutePath + "/spotless.importorder")
+
+    x10CheckstyleFilePath = (new File('.').absolutePath + "/checkstyle.xml")
+
+    isCIBuild = System.getenv("JENKINS_URL") != null
+
+    x10LibraryProguardRuleFilePath = (new File('.').absolutePath + "/proguard-x10-library.pro")
+    x10FindbugsAnnotatonsProguardRuleFilePath = (new File('.').absolutePath + "/proguard-findbug-annotations-rules.pro")
+
+    dependencyJodaTime = "joda-time:joda-time:2.9.4"
+    dependencyComAndroidSupportAppCompatv7 = "com.android.support:appcompat-v7:25.2.0"
+    dependencyComAndroidSupportv4 = "com.android.support:support-v4:25.2.0"
+    dependencyComAndroidSupportAnnotations = "com.android.support:support-annotations:24.2.0"
+    dependencyJunit = "junit:junit:4.12"
+    dependencyGuava = "com.google.guava:guava:20.0"
+    dependencyFindbugsAnnotations = "com.google.code.findbugs:annotations:3.0.1"
+
+    dependencyComAndroidSupportTestRunner = 'com.android.support.test:runner:0.5'
+    // Set this dependency to use JUnit 4 rules
+    dependencyComAndroidSupportTestRules = 'com.android.support.test:rules:0.5'
+    // Set this dependency to build and run Espresso tests
+    dependencyComAndroidSupportTestExpressoExpressoCore = 'com.android.support.test.espresso:espresso-core:2.2.2'
+    dependencyComAndroidSupportTestExpressoExpressoIntents = 'com.android.support.test.espresso:espresso-intents:2.2.2'
+    // Set this dependency to build and run UI Automator tests
+    dependencyComAndroidSupportTestUIAutomatorUIAutomator = 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+}
+
+task javadoc(type: Javadoc) {}
+
+//task alljavadoc(type: Javadoc) {
+//    def x10Libraries = []
+//    new File(x10AllLibraryNamesFile).eachLine { line ->
+//        x10Libraries << line
+//    }
+//
+//    doFirst {
+//        source = x10Libraries.collect {
+//            project(":${it}").getTasks().getByPath(":${javadocTaskName}").source
+//        }
+//        classpath += files(x10Libraries.collect {
+//            project(":${it}").getTasks().getByPath(":${javadocTaskName}").classpath
+//        })
+//    }
+//
+//    def javadocTaskName = "javadoc"
+//    outputs.upToDateWhen { false }
+//
+//    doFirst {
+//        x10AllSourcesForJavaodc = []
+//        new File(x10AllSourcesForJavadocFile).eachLine { line ->
+//            x10AllSourcesForJavaodc << line
+//        }
+//
+//        x10AllSourcesForJavaodc = files(x10AllSourcesForJavaodc)
+//        println "Files for javadoc: $x10AllSourcesForJavaodc"
+//    }
+//
+//    source = file("/tmp/foobar.java")
+//    // source = project(":${x10Libraries[0]}").extensions.findByType(com.android.build.gradle.LibraryExtension).sourceSet
+//    description = "Generates javadoc for build $project.name"
+//    destinationDir = file("${buildDir}/javadoc")
+//    options.links 'http://docs.oracle.com/javase/8/docs/api/'
+//    options.memberLevel = JavadocMemberLevel.PRIVATE
+//    failOnError = false
+//
+//    x10Libraries.forEach { String x10ModuleName ->
+//        def task = getTasks().getByPath("$x10ModuleName:$javadocTaskName")
+//        println "$name now depends on $task"
+//
+//        dependsOn task
+//        mustRunAfter task
+//    }
+//}
+
+

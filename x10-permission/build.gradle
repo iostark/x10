@@ -1,0 +1,31 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
+        versionCode project.x10PermissionVersionCode
+        versionName project.x10PermissionVersionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+    }
+}
+
+apply from: project.x10LibraryGradle
+
+javadoc {
+}
+
+dependencies {
+    compile project.dependencyComAndroidSupportv4
+    compile project.dependencyComAndroidSupportAppCompatv7
+    compile project.dependencyComAndroidSupportAnnotations
+
+    testCompile project.dependencyJunit
+}

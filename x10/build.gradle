@@ -1,0 +1,36 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
+        versionCode project.x10VersionCode
+        versionName project.x10VersionName
+        buildConfigField "String", "SDK_SOURCE_CONTROL_HASH", "\"$project.gitCommitHash\""
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+    }
+}
+
+apply from: project.x10LibraryGradle
+
+dependencies {
+    compile project(':x10-base')
+    compile project(':x10-bitmap')
+    compile project(':x10-email')
+    compile project(':x10-file')
+    compile project(':x10-inputdevice')
+    compile project(':x10-media')
+    compile project(':x10-permission')
+    compile project(':x10-threading')
+    compile project(':x10-time')
+
+    compile project.dependencyComAndroidSupportAppCompatv7
+
+    testCompile project.dependencyJunit
+}

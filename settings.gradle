@@ -1,0 +1,23 @@
+def findAllX10Libraries() {
+    def libs = []
+    new File(".").traverse(maxDepth: 1, nameFilter: ~/x10.*/, type: groovy.io.FileType.DIRECTORIES) {
+        def libraryName = it.name
+        libs << "$libraryName"
+    }
+    return libs
+}
+
+// Include app and all x10 library modules
+include ':app'
+findAllX10Libraries().each {
+    include ":$it"
+}
+
+// Save all x10 library modules as file
+File file = new File("x10Libraries")
+file.withWriter { out ->
+    findAllX10Libraries().each { it ->
+        out.println "$it"
+    }
+}
+

@@ -1,0 +1,34 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
+        versionCode project.x10BaseVersionCode
+        versionName project.x10BaseVersionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            buildConfigField "String", "X10_LIBRARY_ID", "\"$project.x10LibraryId\""
+        }
+        debug {
+            buildConfigField "String", "X10_LIBRARY_ID", "\"$project.x10LibraryId\""
+        }
+    }
+}
+
+apply from: project.x10LibraryGradle
+
+dependencies {
+    compile project.dependencyComAndroidSupportAppCompatv7
+    compile project.dependencyComAndroidSupportTestRules
+    compile project.dependencyGuava // FIXME This library must be removed since x10 does not ship any 3rd party lib
+
+    testCompile project.dependencyJunit
+}

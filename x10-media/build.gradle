@@ -1,0 +1,32 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion project.compileSdkVersion
+    buildToolsVersion project.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
+        versionCode project.x10MediaVersionCode
+        versionName project.x10MediaVersionName
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+    }
+}
+
+apply from: project.x10LibraryGradle
+
+javadoc {
+    exclude '**/media/test/**'
+}
+
+dependencies {
+    compile project(':x10-bitmap')
+    compile project.dependencyComAndroidSupportAppCompatv7
+    compile project.dependencyComAndroidSupportAnnotations
+
+    testCompile project.dependencyJunit
+}

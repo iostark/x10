@@ -1,0 +1,38 @@
+{
+  "name": "x10-server",
+  "version": "0.0.1",
+  "description": "X10 framework backend server",
+  "main": "app/index.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js",
+    "lint": "eslint . --ignore-path .gitignore --cache",
+    "pretest": "npm run lint",
+    "test": "NODE_ENV=test TESTING=1 istanbul cover --include-all-sources -x **/server-spec/** jasmine",
+    "single-test": "NODE_ENV=test TESTING=1 jasmine"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "async": "^2.3.0",
+    "body-parser": "1.17.1",
+    "moment": "2.18.1",
+    "express": "4.15.2",
+    "winston": "2.3.1",
+    "winston-daily-rotate-file": "1.4.6"
+  },
+  "engines": {
+    "node": ">=7.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config": "^0.3.0",
+    "eslint-config-defaults": "^9.0.0",
+    "istanbul": "^0.4.5",
+    "jasmine": "^2.5.3",
+    "jasmine-console-reporter": "^1.2.7",
+    "jasmine-reporters": "^2.2.1",
+    "nodemon": "^1.11.0",
+    "rewire": "^2.5.1",
+    "validator": "^7.0.0"
+  }
+}

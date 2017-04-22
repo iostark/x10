@@ -59,6 +59,8 @@ typings/
 # dotenv environment variables file
 .env
 
+docker
+
 ### OSX ###
 *.DS_Store
 

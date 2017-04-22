@@ -1,0 +1,3 @@
+* TODO Add copyright notice
+* TODO LICENCE in every module
+  https://developer.android.com/studio/build/shrink-code.html

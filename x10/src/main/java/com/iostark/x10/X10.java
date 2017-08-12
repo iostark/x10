@@ -15,6 +15,7 @@ public class X10 {
     /**
      * Initialize the SDK.
      *
+     * @param data Data used to initialise the library
      * @param sdkInitializationCallback Callback to get notify about the SDK initialization result
      * @since V0_5_0
      */

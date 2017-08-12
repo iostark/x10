@@ -66,8 +66,7 @@ node {
             // '-u root' to force volume user executing the sh commands to be root
             dockerSlaveImage.inside("-u root") {
                 stage ("Fix workspace permission") {
-                    sh "cat /home/jenkins/.bash_profile"
-                    sh "ls -al ."
+                    sh "runuser --login jenkins -c \'printenv\'"
                     // Next sh command run as jenkins. However workspace's permission
                     // are not for jenkins user. Hence change permission 
                     sh "chmod -R 777 ."
@@ -85,8 +84,6 @@ node {
                     }
                     else {
                         stage ("Code Quality") {
-                            sh "runuser --login jenkins -c \'pwd\'"
-                            sh "runuser --login jenkins -c \'printenv\'"
                             sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew clean -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
                             sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew checkstyle${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
                             sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew lint${flavor} --continue -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"

@@ -97,18 +97,18 @@ RUN cat $JENKINS_AGENT_HOME/.ssh/jenkins@jenkins-slave.id_rsa.pub >> $JENKINS_AG
 # Instruct Jenkins not to prompt for host key verification 
 RUN echo "Host *\n\tStrictHostKeyChecking no\n" >> $JENKINS_AGENT_HOME/.ssh/config
 # Set permissions
-RUN chown -R jenkins $JENKINS_AGENT_HOME
-RUN chgrp -R jenkins $JENKINS_AGENT_HOME
-RUN chmod 600 $JENKINS_AGENT_HOME/.ssh/authorized_keys
-RUN chmod 700 $JENKINS_AGENT_HOME/.ssh
+RUN chown -R jenkins $JENKINS_AGENT_HOME && \
+    chgrp -R jenkins $JENKINS_AGENT_HOME && \
+    chmod 600 $JENKINS_AGENT_HOME/.ssh/authorized_keys && \
+    chmod 700 $JENKINS_AGENT_HOME/.ssh
 # Add the jenkins user to sudoers
 RUN echo "jenkins  ALL=(ALL)  ALL" >> etc/sudoers
 # Add env variable to jenkins's environment
-RUN touch "$JENKINS_AGENT_HOME/.bash_profile"
-RUN echo "export ANDROID_HOME=$ANDROID_HOME" >> "$JENKINS_AGENT_HOME/.bash_profile"
-RUN echo "export GRADLE_HOME=$GRADLE_HOME" >> "$JENKINS_AGENT_HOME/.bash_profile"
-RUN echo "export PATH=$PATH" >> "$JENKINS_AGENT_HOME/.bash_profile"
-RUN chown $JENKINS_USER:$JENKINS_GROUP "$JENKINS_AGENT_HOME/.bash_profile"
+RUN touch "$JENKINS_AGENT_HOME/.bash_profile" && \
+    echo "export ANDROID_HOME=$ANDROID_HOME" >> "$JENKINS_AGENT_HOME/.bash_profile" && \
+    echo "export GRADLE_HOME=$GRADLE_HOME" >> "$JENKINS_AGENT_HOME/.bash_profile" && \
+    echo "export PATH=$PATH" >> "$JENKINS_AGENT_HOME/.bash_profile" && \
+    chown $JENKINS_USER:$JENKINS_GROUP "$JENKINS_AGENT_HOME/.bash_profile"
 
 # Jenkins web
 EXPOSE 8080

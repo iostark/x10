@@ -20,7 +20,7 @@ plugins {
     id 'org.ajoberstar.grgit' version '1.6.0'
     // id "net.ltgt.errorprone" version "0.0.9"
     id "com.vanniktech.android.junit.jacoco" version "0.6.0"
-    id "com.diffplug.gradle.spotless" version "3.1.0"
+    id "com.diffplug.gradle.spotless" version "3.4.1"
     id "com.dorongold.task-tree" version "1.3"
 }
 

@@ -69,3 +69,4 @@ fabric.properties
 ### OSX ###
 local.properties
 tmp
+x10Libraries

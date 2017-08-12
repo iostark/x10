@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2015 IO Stark
+ *
+ * Licensed under licensing terms in LICENSES.md
+ */
 package com.iostark.x10.permission;
 
 import com.iostark.x10.base.annotation.visibility.KeepEntryPoint;
@@ -9,21 +14,21 @@ import com.iostark.x10.base.annotation.visibility.KeepEntryPoint;
  */
 @KeepEntryPoint
 public interface PermissionRationaleHandler {
-    /**
-     * Indicate if a rationale must be displayed before requesting a permission.
-     *
-     * @return true if a rationale must be displayed. false otherwise
-     * @since V0_5_0
-     */
-    @KeepEntryPoint
-    boolean showRationaleBeforeRequestingPermission();
+  /**
+   * Indicate if a rationale must be displayed before requesting a permission.
+   *
+   * @return true if a rationale must be displayed. false otherwise
+   * @since V0_5_0
+   */
+  @KeepEntryPoint
+  boolean showRationaleBeforeRequestingPermission();
 
-    /**
-     * Indicate if a rationale must be displayed after requesting a permission.
-     *
-     * @return true if a rationale must be displayed. false otherwise
-     * @since V0_5_0
-     */
-    @KeepEntryPoint
-    boolean showRationaleAfterRefusingPermission();
+  /**
+   * Indicate if a rationale must be displayed after requesting a permission.
+   *
+   * @return true if a rationale must be displayed. false otherwise
+   * @since V0_5_0
+   */
+  @KeepEntryPoint
+  boolean showRationaleAfterRefusingPermission();
 }

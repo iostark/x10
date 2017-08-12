@@ -88,7 +88,7 @@ project.ext {
     x10AllSourcesForJavadocFile = "/tmp/javadoc.classfiles"
     x10AllSourcesForJavaodc = ""
 
-    x10LicenseFilePath = (new File('.').absolutePath + "/LICENSES.md")
+    x10LicenseHeaderFilePath = (new File('.').absolutePath + "/LICENSE_HEADER")
     x10ImportOrderFilePath = (new File('.').absolutePath + "/spotless.importorder")
 
     x10CheckstyleFilePath = (new File('.').absolutePath + "/checkstyle.xml")

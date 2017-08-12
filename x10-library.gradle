@@ -341,11 +341,12 @@ android.libraryVariants.all { variant ->
 //    options.compilerArgs += [ '-Xep:DeadException:WARN', '-Xep:GuardedByValidator:OFF' ]
 //}
 
-// Code Format
+// Code Formatting
 apply plugin: 'com.diffplug.gradle.spotless'
 spotless {
     java {
-        licenseHeaderFile "$project.x10LicenseFilePath"
+        target "**/*.java"
+        licenseHeaderFile "$project.x10LicenseHeaderFilePath"
         importOrderFile "$project.x10ImportOrderFilePath"
         removeUnusedImports()
         googleJavaFormat("1.3")

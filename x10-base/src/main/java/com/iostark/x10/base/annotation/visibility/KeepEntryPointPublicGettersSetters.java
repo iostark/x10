@@ -1,7 +1,8 @@
 /*
- * Copyright (c) $year IO Stark
+ * Copyright (C) 2015 IO Stark
+ *
+ * Licensed under licensing terms in LICENSES.md
  */
-
 package com.iostark.x10.base.annotation.visibility;
 
 import java.lang.annotation.Documented;
@@ -11,19 +12,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Signifies this API (public method or field) is an library entry point and must not be shrink/optimized/obfuscated by Proguard.
- * <p>
- *     You can ignore this annotation.
- * </p>
+ * Signifies this API (public method or field) is an library entry point and must not be
+ * shrink/optimized/obfuscated by Proguard.
+ *
+ * <p>You can ignore this annotation.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target({
-        ElementType.ANNOTATION_TYPE,
-        ElementType.CONSTRUCTOR,
-        ElementType.FIELD,
-        ElementType.METHOD,
-        ElementType.TYPE
+  ElementType.ANNOTATION_TYPE,
+  ElementType.CONSTRUCTOR,
+  ElementType.FIELD,
+  ElementType.METHOD,
+  ElementType.TYPE
 })
 @Documented
-public @interface KeepEntryPointPublicGettersSetters {
-}
+public @interface KeepEntryPointPublicGettersSetters {}

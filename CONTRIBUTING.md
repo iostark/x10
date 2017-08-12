@@ -44,7 +44,8 @@ change, with full public classes/method/members documented
 
 Guidelines for any code contributions:
 
-  1. Any significant changes should be accompanied by tests. The project
+  0. All pull requests must not fail when executing: `./gradlew check`
+  1. All changes should be accompanied by tests. The project
   already has some test coverage, so look at some of the existing tests if
   you're unsure how to go about it.
   2. All contributions are subject to specific licensing terms. By submitting a Pull Request, you automatically:

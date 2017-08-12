@@ -45,12 +45,17 @@ node {
 	     return {
             echo "Building flavor ${flavor}"
 
-	         node {
+            dir('ci') {
+                dockerImage = docker.build("x10-android-ci-jenkins-slave")
+            }
+
+	         dockerNode(image: dockerImage.id) {
+	         // node {
                  def rootWorkspace = pwd()
                  def buildUniqueName = osVersion
 
 	             ws("${rootWorkspace}-${buildUniqueName}") {
-	                 wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '', displayNameOffset: 0, installationName: 'Default Xvfb', screen: '']) {
+	                 // wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '', displayNameOffset: 0, installationName: 'Default Xvfb', screen: '']) {
                          // Keep X builds
                          // Discard old builds
                          // Make a build every 12h
@@ -69,18 +74,18 @@ node {
                         if (IS_CODE_QUALITY_STAGE_ENABLED) {
                              if(IS_BRANCH_STAGING) {
                                stage ("Build (All build types)") {
-                                   sh "cd android-x10 && ./gradlew clean -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                   sh "cd android-x10 && ./gradlew clean build -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                                   sh "./gradlew clean -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                                   sh "./gradlew clean build -PBUILD_NUMBER=${env.BUILD_NUMBER}"
                                }
                              }
                              else {
                                stage ("Code Quality") {
-                                   sh "cd android-x10 && ./gradlew clean -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                   sh "cd android-x10 && ./gradlew checkstyle${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                   sh "cd android-x10 && ./gradlew lint${flavor} --continue -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                   sh "cd android-x10 && ./gradlew findbugs${flavor} --continue -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                   sh "cd android-x10 && ./gradlew pmd${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                   sh "cd android-x10 && ./gradlew jdepend${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                                   sh "./gradlew clean -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                                   sh "./gradlew checkstyle${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                                   sh "./gradlew lint${flavor} --continue -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                                   sh "./gradlew findbugs${flavor} --continue -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                                   sh "./gradlew pmd${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                                   sh "./gradlew jdepend${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
                                }
                              }
                     
@@ -94,7 +99,7 @@ node {
 
                         if (IS_ASSEMBLE_STAGE_ENABLED) {
                              stage ("Assemble ${flavor}") {
-                             	sh "cd android-x10 && ./gradlew clean assemble${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                             	sh "./gradlew clean assemble${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
                              }
 
                              //step([$class: 'JavadocArchiver', javadocDir: '**/javadoc', keepAll: false])
@@ -102,7 +107,7 @@ node {
 
                         if (IS_UNIT_TEST_STAGE_ENABLED) {
                              stage ("Unit Test ${flavor}") {
-                             	sh "cd android-x10 && ./gradlew test${flavor}UnitTest -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                             	sh "./gradlew test${flavor}UnitTest -PBUILD_NUMBER=${env.BUILD_NUMBER}"
                              }
 
                             always {
@@ -112,7 +117,7 @@ node {
 
                          if (IS_INSTRUMENTED_TEST_STAGE_ENABLED) {
                              stage ("Instrumented Test ${flavor}") {
-                             	sh "cd android-x10 && ./gradlew connected${flavor}AndroidTest -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                             	sh "./gradlew connected${flavor}AndroidTest -PBUILD_NUMBER=${env.BUILD_NUMBER}"
                              }
 
                             always {
@@ -122,8 +127,8 @@ node {
 
                          if (IS_TEST_COVERAGE_STAGE_ENABLED) {
                              stage ("Code Coverage ${flavor}") {
-                                sh "cd android-x10 && ./gradlew jacoco${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                sh "cd android-x10 && ./gradlew jacocoTestReport${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}" 
+                                sh "./gradlew jacoco${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                                sh "./gradlew jacocoTestReport${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}" 
                              }
 
                             always {
@@ -131,12 +136,12 @@ node {
                             }
 
                              stage ("Test Coverage ${flavor}") {
-                             	sh "cd android-x10 && ./gradlew create${flavor}CoverageReport -PBUILD_NUMBER=${env.BUILD_NUMBER}"
+                             	sh "./gradlew create${flavor}CoverageReport -PBUILD_NUMBER=${env.BUILD_NUMBER}"
                              }
                          }
 
                          fingerprint ''
-                     }
+                     // }
                  }
             }
         }

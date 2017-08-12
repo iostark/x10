@@ -17,7 +17,7 @@ def BRANCH_PRODUCTION="master"
 def IS_BRANCH_STAGING=false
 def IS_BRANCH_PRODUCTION=false
 // def MATRIX_ANDROID_OS_SUPPORTED=["4.4", "5.0", "6.0", "7.0"]
-def MATRIX_ANDROID_OS_SUPPORTED=["4.4"]
+def MATRIX_ANDROID_OS_SUPPORTED=["4.4"] // For testing only
 
 def IS_CODE_QUALITY_STAGE_ENABLED=true
 def IS_ASSEMBLE_STAGE_ENABLED=true
@@ -72,6 +72,15 @@ node {
                     sh "chmod -R 777 ."
                     sh "ls -al ."
                 }
+
+                def androidEmulatorName = "x10-android-ci-emulator"
+                def avdLocation = "$volumeWorkspace/avd/"
+
+                //stage ("Setup emulator") {
+                //    sh "runuser --login jenkins -c \'mkdir -pv $avdLocation\'"
+                //    sh "runuser --login jenkins -c \'cd $volumeWorkspace && avdmanager -v create avd -n ${androidEmulatorName} -p $avdLocation -t 2 -s\'"
+                //    sh "runuser --login jenkins -c \'cd $volumeWorkspace && emulator -avd ${androidEmulatorName} -p $avdLocation -accel auto -accel-check -engine auto -gpu swiftshader -no-window -verbose -show-kernel -logcat *:v -memory 2048 -netspeed full\'"
+                //}
 
                 // wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '', displayNameOffset: 0, installationName: 'Default Xvfb', screen: '']) {
 
@@ -139,15 +148,18 @@ node {
                         step([$class: 'JacocoPublisher', classPattern: '**/classes', execPattern: '**/**.exec, **/**.ec', sourcePattern: '**/src/main/java'])
                     }
 
-                    stage ("Test Coverage ${flavor}") {
-                        sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew create${flavor}CoverageReport -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
-                    }
+                    //stage ("Test Coverage ${flavor}") {
+                    //    sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew create${flavor}CoverageReport -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                    //}
                 }
 
-                fingerprint ''
-                dockerSlaveImage.stop()
+                //stage ("Tear down emulator") {
+                //    sh "runuser --login jenkins -c \'cd $volumeWorkspace && avdmanager -v delete avd -n ${androidEmulatorName}\'"
+                //}
 
+                fingerprint ''
             }
+            dockerSlaveImage.stop()
         }
     }
 

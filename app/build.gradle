@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project.dependencyComAndroidSupportAppCompatv7
-    testCompile project.dependencyJunit
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project.dependencyComAndroidSupportAppCompatv7
+    testImplementation project.dependencyJunit
 }

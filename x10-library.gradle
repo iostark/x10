@@ -10,32 +10,32 @@ def reportsDir = "${project.buildDir}/reports"
 
 if (project.name.contains("x10-base")) {
     dependencies {
-        compile(project.dependencyFindbugsAnnotations) {
+        implementation(project.dependencyFindbugsAnnotations) {
             exclude group: 'net.jcip', module: 'jcip-annotations'
             exclude group: 'com.google.code.findbugs', module: 'jsr305'
         }
 
-        androidTestCompile(project.dependencyComAndroidSupportTestRules) {}
+        androidTestImplementation(project.dependencyComAndroidSupportTestRules) {}
 
-        androidTestCompile(project.dependencyComAndroidSupportTestExpressoExpressoIntents) {
+        androidTestImplementation(project.dependencyComAndroidSupportTestExpressoExpressoIntents) {
             exclude group: 'com.android.support', module: 'support-annotations'
             exclude group: 'com.google.code.findbugs', module: 'annotations'
             exclude group: 'com.google.code.findbugs', module: 'jsr305'
         }
 
-        androidTestCompile(project.dependencyComAndroidSupportAppCompatv7) {
+        androidTestImplementation(project.dependencyComAndroidSupportAppCompatv7) {
             exclude group: 'com.android.support', module: 'support-annotations'
             exclude group: 'com.google.code.findbugs', module: 'annotations'
             exclude group: 'com.google.code.findbugs', module: 'jsr305'
         }
-        androidTestCompile(project.dependencyComAndroidSupportTestExpressoExpressoCore) {
+        androidTestImplementation(project.dependencyComAndroidSupportTestExpressoExpressoCore) {
             exclude group: 'com.android.support', module: 'support-annotations'
             exclude group: 'com.google.code.findbugs', module: 'annotations'
             exclude group: 'com.google.code.findbugs', module: 'jsr305'
         }
-        androidTestCompile(project.dependencyComAndroidSupportTestUIAutomatorUIAutomator)
-        androidTestCompile(project.dependencyComAndroidSupportTestRunner)
-        androidTestCompile('com.schibsted.spain:barista:0.0.1') {
+        androidTestImplementation(project.dependencyComAndroidSupportTestUIAutomatorUIAutomator)
+        androidTestImplementation(project.dependencyComAndroidSupportTestRunner)
+        androidTestImplementation('com.schibsted.spain:barista:0.0.1') {
             exclude group: 'com.android.support', module: 'support-annotations'
             exclude group: 'com.google.code.findbugs', module: 'annotations'
             exclude group: 'com.google.code.findbugs', module: 'jsr305'
@@ -43,32 +43,32 @@ if (project.name.contains("x10-base")) {
     }
 } else {
     dependencies {
-        compile(project(':x10-base')) {
+        implementation(project(':x10-base')) {
 
         }
 
-        androidTestCompile(project.dependencyComAndroidSupportTestRules) {}
+        androidTestImplementation(project.dependencyComAndroidSupportTestRules) {}
 
-        androidTestCompile(project.dependencyComAndroidSupportTestExpressoExpressoIntents) {
+        androidTestImplementation(project.dependencyComAndroidSupportTestExpressoExpressoIntents) {
             transitive = false
             exclude group: 'com.android.support', module: 'support-annotations'
             exclude group: 'com.google.code.findbugs', module: 'annotations'
             exclude group: 'com.google.code.findbugs', module: 'jsr305'
         }
 
-        androidTestCompile(project.dependencyComAndroidSupportAppCompatv7) {
+        androidTestImplementation(project.dependencyComAndroidSupportAppCompatv7) {
             exclude group: 'com.android.support', module: 'support-annotations'
             exclude group: 'com.google.code.findbugs', module: 'annotations'
             exclude group: 'com.google.code.findbugs', module: 'jsr305'
         }
-        androidTestCompile(project.dependencyComAndroidSupportTestExpressoExpressoCore) {
+        androidTestImplementation(project.dependencyComAndroidSupportTestExpressoExpressoCore) {
             exclude group: 'com.android.support', module: 'support-annotations'
             exclude group: 'com.google.code.findbugs', module: 'annotations'
             exclude group: 'com.google.code.findbugs', module: 'jsr305'
         }
-        androidTestCompile(project.dependencyComAndroidSupportTestUIAutomatorUIAutomator)
-        androidTestCompile(project.dependencyComAndroidSupportTestRunner)
-        androidTestCompile('com.schibsted.spain:barista:0.0.1') {
+        androidTestImplementation(project.dependencyComAndroidSupportTestUIAutomatorUIAutomator)
+        androidTestImplementation(project.dependencyComAndroidSupportTestRunner)
+        androidTestImplementation('com.schibsted.spain:barista:0.0.1') {
             exclude group: 'com.android.support', module: 'support-annotations'
             exclude group: 'com.google.code.findbugs', module: 'annotations'
             exclude group: 'com.google.code.findbugs', module: 'jsr305'

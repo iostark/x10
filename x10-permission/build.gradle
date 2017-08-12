@@ -23,9 +23,9 @@ javadoc {
 }
 
 dependencies {
-    compile project.dependencyComAndroidSupportv4
-    compile project.dependencyComAndroidSupportAppCompatv7
-    compile project.dependencyComAndroidSupportAnnotations
+    implementation project.dependencyComAndroidSupportv4
+    implementation project.dependencyComAndroidSupportAppCompatv7
+    implementation project.dependencyComAndroidSupportAnnotations
 
-    testCompile project.dependencyJunit
+    testImplementation project.dependencyJunit
 }

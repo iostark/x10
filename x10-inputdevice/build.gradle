@@ -20,8 +20,8 @@ android {
 apply from: project.x10LibraryGradle
 
 dependencies {
-    compile project.dependencyComAndroidSupportAppCompatv7
-    compile project.dependencyComAndroidSupportAnnotations
+    implementation project.dependencyComAndroidSupportAppCompatv7
+    implementation project.dependencyComAndroidSupportAnnotations
 
-    testCompile project.dependencyJunit
+    testImplementation project.dependencyJunit
 }

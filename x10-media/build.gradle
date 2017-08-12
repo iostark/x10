@@ -24,9 +24,9 @@ javadoc {
 }
 
 dependencies {
-    compile project(':x10-bitmap')
-    compile project.dependencyComAndroidSupportAppCompatv7
-    compile project.dependencyComAndroidSupportAnnotations
+    implementation project(':x10-bitmap')
+    implementation project.dependencyComAndroidSupportAppCompatv7
+    implementation project.dependencyComAndroidSupportAnnotations
 
-    testCompile project.dependencyJunit
+    testImplementation project.dependencyJunit
 }

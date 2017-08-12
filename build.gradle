@@ -116,7 +116,8 @@ project.ext {
     dependencyComAndroidSupportTestUIAutomatorUIAutomator = 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }
 
-task javadoc(type: Javadoc) {}
+// Javadoc
+//task javadoc(type: Javadoc) {}
 
 //task alljavadoc(type: Javadoc) {
 //    def x10Libraries = []

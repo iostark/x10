@@ -292,25 +292,46 @@ android.libraryVariants.all { variant ->
 }
 
 // Javadoc
-task javadoc(type: Javadoc) {
-    description = "Generates javadoc for build $project.name"
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    classpath += configurations.compile
-    destinationDir = file("build/javadoc/")
-    options.links 'http://docs.oracle.com/javase/8/docs/api/', 'https://developer.android.com/reference/'
-    options.memberLevel = JavadocMemberLevel.PROTECTED
+//task("javadoc", type: Javadoc) {}
 
-    failOnError = false
+android.libraryVariants.all { variant ->
+    task("javadoc${variant.name.capitalize()}", type: Javadoc, dependsOn: "compile${variant.name.capitalize()}Sources") {
+        description = "Generates javadoc for build $project.name"
+        // Link module's source code
+        source = variant.javaCompile.source
+        // Link Android SDK class definitions
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        // Link module dependencies
+        classpath += files(variant.javaCompile.classpath.files)
 
-    doLast {
-        def file = new File("${x10AllSourcesForJavadocFile}_${project.name}")
-        println "FILE: $file"
-        source.forEach { file2 ->
-            println "File: $file2"
-            //file2 << "$file2"
-        }
+        //classpath.each {
+        //    println("JAVADOC: CP: $it")
+        //}
+
+        destinationDir = file("build/javadoc/")
+        options.links 'http://docs.oracle.com/javase/8/docs/api/', 'https://developer.android.com/reference/'
+        options.memberLevel = JavadocMemberLevel.PROTECTED
+
+        failOnError = false
+
+        //doLast {
+        //    def file = new File("${x10AllSourcesForJavadocFile}_${project.name}")
+        //    println "FILE: $file"
+        //    source.forEach { file2 ->
+        //        println "File: $file2"
+        //        file2 << "$file2"
+        //    }
+        //}
     }
+
+    // Javadoc JAR
+    task("javadocJAR${variant.name.capitalize()}", type: Jar, dependsOn: "javadoc${variant.name.capitalize()}") {
+        classifier = 'javadoc'
+        from tasks["javadoc${variant.name.capitalize()}"].destinationDir
+    }
+
+    // Add the Javadoc jar to the project's artifacts. This will allow us to upload it easily later
+    project.artifacts.add("archives", tasks["javadocJAR${variant.name.capitalize()}"])
 }
 
 // Prevent Error Prone Programming
@@ -344,15 +365,6 @@ spotless {
         endWithNewline()
     }
 }
-
-// Javadoc
-task javadocJar(type: Jar, dependsOn: "javadoc") {
-    classifier = 'javadoc'
-    from tasks["javadoc"].destinationDir
-}
-
-// Add the Javadoc jar to the project's artifacts. This will allow us to upload it easily later
-project.artifacts.add("archives", tasks["javadocJar"]);
 
 // Project report
 // apply plugin: 'project-report'

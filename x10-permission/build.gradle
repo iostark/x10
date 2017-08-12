@@ -19,9 +19,6 @@ android {
 
 apply from: project.x10LibraryGradle
 
-javadoc {
-}
-
 dependencies {
     implementation project.dependencyComAndroidSupportv4
     implementation project.dependencyComAndroidSupportAppCompatv7

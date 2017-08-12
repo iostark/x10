@@ -16,6 +16,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -y upgrade && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install lsb-release && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install software-properties-common && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y git openssh-server && \
     DEBIAN_FRONTEND=noninteractive apt-get -y install curl
 
 #
@@ -26,8 +27,7 @@ RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true 
     DEBIAN_FRONTEND=noninteractive apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y oracle-java8-installer && \
     rm -rf /var/cache/oracle-jdk8-installer && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y oracle-java8-set-default && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y git openssh-server
+    DEBIAN_FRONTEND=noninteractive apt-get install -y oracle-java8-set-default
 
 #
 # Gradle

@@ -10,7 +10,7 @@ def reportsDir = "${project.buildDir}/reports"
 
 if (project.name.contains("x10-base")) {
     dependencies {
-        implementation(project.dependencyFindbugsAnnotations) {
+        api(project.dependencyFindbugsAnnotations) {
             exclude group: 'net.jcip', module: 'jcip-annotations'
             exclude group: 'com.google.code.findbugs', module: 'jsr305'
         }
@@ -43,7 +43,7 @@ if (project.name.contains("x10-base")) {
     }
 } else {
     dependencies {
-        implementation(project(':x10-base')) {
+        api(project(':x10-base')) {
 
         }
 

@@ -27,7 +27,7 @@ task clean(type: Delete) {
 
 // Git
 apply plugin: 'org.ajoberstar.grgit'
-def repo = grgit.open('../')
+def repo = grgit.open('./')
 
 project.ext {
     minSdkVersion = 19

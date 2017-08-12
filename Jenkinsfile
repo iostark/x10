@@ -16,7 +16,8 @@ def BRANCH_STAGING="dev"
 def BRANCH_PRODUCTION="master"
 def IS_BRANCH_STAGING=false
 def IS_BRANCH_PRODUCTION=false
-def MATRIX_ANDROID_OS_SUPPORTED=["4.4", "5.0", "6.0", "7.0"]
+// def MATRIX_ANDROID_OS_SUPPORTED=["4.4", "5.0", "6.0", "7.0"]
+def MATRIX_ANDROID_OS_SUPPORTED=["4.4"]
 
 def IS_CODE_QUALITY_STAGE_ENABLED=true
 def IS_ASSEMBLE_STAGE_ENABLED=true
@@ -26,9 +27,17 @@ def IS_TEST_COVERAGE_STAGE_ENABLED=true
 def IS_DEPLOY_STAGE_ENABLED=true
 
 node {
-    stage ("Preparing") {
-        echo "done"
-    }
+    // Clean up workspace
+    step([$class: 'WsCleanup'])
+
+    // Keep X builds
+    // Discard old builds
+    // Make a build every 12h
+    properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '1', numToKeepStr: '2')), pipelineTriggers([[$class: 'PeriodicFolderTrigger', interval: '12h']])])
+
+    stage ("Checkout") {
+        checkout scm 
+    } 
 
      // Pulls the android flavor out of the branch name the branch is prepended with /QA_
      def flavorFromBranchName = { String branchName ->
@@ -43,106 +52,104 @@ node {
 
      def jobMaker = { String osVersion ->
 	     return {
-            echo "Building flavor ${flavor}"
+            def dockerSlaveImage = null
 
-            dir('ci') {
-                dockerImage = docker.build("x10-android-ci-jenkins-slave")
+            stage ("Preparing Docker Container image") {
+                echo "Building flavor ${flavor}"
+                dir('ci') {
+                    // Build image
+                    dockerSlaveImage = docker.build("x10-android-ci-jenkins-slave")
+                }
             }
 
-	         dockerNode(image: dockerImage.id) {
-	         // node {
-                 def rootWorkspace = pwd()
-                 def buildUniqueName = osVersion
+            def volumeWorkspace = pwd()
+            // '-u root' to force volume user executing the sh commands to be root
+            dockerSlaveImage.inside("-u root") {
+                stage ("Fix workspace permission") {
+                    sh "cat /home/jenkins/.bash_profile"
+                    sh "ls -al ."
+                    // Next sh command run as jenkins. However workspace's permission
+                    // are not for jenkins user. Hence change permission 
+                    sh "chmod -R 777 ."
+                    sh "ls -al ."
+                }
 
-	             ws("${rootWorkspace}-${buildUniqueName}") {
-	                 // wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '', displayNameOffset: 0, installationName: 'Default Xvfb', screen: '']) {
-                         // Keep X builds
-                         // Discard old builds
-                         // Make a build every 12h
-                         properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '1', numToKeepStr: '2')), pipelineTriggers([[$class: 'PeriodicFolderTrigger', interval: '12h']])])
+                // wrap([$class: 'Xvfb', additionalOptions: '', assignedLabels: '', displayNameOffset: 0, installationName: 'Default Xvfb', screen: '']) {
 
-                         stage ("Checkout") { 
-                           // Checkout code from repository and update any submodules
-                           //FIXME: Force wipeworkspace: checkout scm [$class: 'GitSCM', extensions: [[$class: 'WipeWorkspace']]]
-                           checkout scm 
+                if (IS_CODE_QUALITY_STAGE_ENABLED) {
+                    if(IS_BRANCH_STAGING) {
+                        stage ("Build (All build types)") {
+                            sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew clean -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                            sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew clean build -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                        }
+                    }
+                    else {
+                        stage ("Code Quality") {
+                            sh "runuser --login jenkins -c \'pwd\'"
+                            sh "runuser --login jenkins -c \'printenv\'"
+                            sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew clean -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                            sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew checkstyle${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                            sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew lint${flavor} --continue -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                            sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew findbugs${flavor} --continue -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                            sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew pmd${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                            sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew jdepend${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                        }
+                    }
+        
+                    always {
+                        androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint/lint-results*.xml', unHealthy: ''
+                        step([$class: 'CheckStylePublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/checkstyle/*.xml', unHealthy: ''])
+                        step([$class: 'FindBugsPublisher', canComputeNew: false, defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', pattern: '**/findbugs/*.xml', unHealthy: ''])
+                        step([$class: 'PmdPublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/pmd/*.xml', unHealthy: ''])
+                    }
+                }
 
-                           def workspace = pwd() 
-                           echo "Root Workspace: ${rootWorkspace}"
-                           echo "Parallel Workspace: ${workspace}"
-                         }
+                if (IS_ASSEMBLE_STAGE_ENABLED) {
+                    stage ("Assemble ${flavor}") {
+                        sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew clean assemble${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                    }
 
-                        if (IS_CODE_QUALITY_STAGE_ENABLED) {
-                             if(IS_BRANCH_STAGING) {
-                               stage ("Build (All build types)") {
-                                   sh "./gradlew clean -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                   sh "./gradlew clean build -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                               }
-                             }
-                             else {
-                               stage ("Code Quality") {
-                                   sh "./gradlew clean -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                   sh "./gradlew checkstyle${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                   sh "./gradlew lint${flavor} --continue -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                   sh "./gradlew findbugs${flavor} --continue -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                   sh "./gradlew pmd${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                   sh "./gradlew jdepend${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                               }
-                             }
-                    
-                            always {
-                                androidLint canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/lint/lint-results*.xml', unHealthy: ''
-                                step([$class: 'CheckStylePublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/checkstyle/*.xml', unHealthy: ''])
-                                step([$class: 'FindBugsPublisher', canComputeNew: false, defaultEncoding: '', excludePattern: '', healthy: '', includePattern: '', pattern: '**/findbugs/*.xml', unHealthy: ''])
-                                step([$class: 'PmdPublisher', canComputeNew: false, defaultEncoding: '', healthy: '', pattern: '**/pmd/*.xml', unHealthy: ''])
-                            }
-                         }
+                    //step([$class: 'JavadocArchiver', javadocDir: '**/javadoc', keepAll: false])
+                }
 
-                        if (IS_ASSEMBLE_STAGE_ENABLED) {
-                             stage ("Assemble ${flavor}") {
-                             	sh "./gradlew clean assemble${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                             }
+                if (IS_UNIT_TEST_STAGE_ENABLED) {
+                    stage ("Unit Test ${flavor}") {
+                        sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew test${flavor}UnitTest -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                    }
 
-                             //step([$class: 'JavadocArchiver', javadocDir: '**/javadoc', keepAll: false])
-                         }
+                    always {
+                        junit allowEmptyResults: true, testResults: '**/build/test-results/**/*.xml'
+                    }
+                }
 
-                        if (IS_UNIT_TEST_STAGE_ENABLED) {
-                             stage ("Unit Test ${flavor}") {
-                             	sh "./gradlew test${flavor}UnitTest -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                             }
+                if (IS_INSTRUMENTED_TEST_STAGE_ENABLED) {
+                    stage ("Instrumented Test ${flavor}") {
+                        sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew connected${flavor}AndroidTest -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                    }
 
-                            always {
-                                junit allowEmptyResults: true, testResults: '**/build/test-results/**/*.xml'
-                            }
-                         }
+                    always {
+                        junit allowEmptyResults: true, testResults: '**/build/androidTests/**/*.xml'
+                    }
+                }
 
-                         if (IS_INSTRUMENTED_TEST_STAGE_ENABLED) {
-                             stage ("Instrumented Test ${flavor}") {
-                             	sh "./gradlew connected${flavor}AndroidTest -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                             }
+                if (IS_TEST_COVERAGE_STAGE_ENABLED) {
+                    stage ("Code Coverage ${flavor}") {
+                        sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew jacoco${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                        sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew jacocoTestReport${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}\'" 
+                    }
 
-                            always {
-                                junit allowEmptyResults: true, testResults: '**/build/androidTests/**/*.xml'
-                            }
-                         }
+                    always {
+                        step([$class: 'JacocoPublisher', classPattern: '**/classes', execPattern: '**/**.exec, **/**.ec', sourcePattern: '**/src/main/java'])
+                    }
 
-                         if (IS_TEST_COVERAGE_STAGE_ENABLED) {
-                             stage ("Code Coverage ${flavor}") {
-                                sh "./gradlew jacoco${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                                sh "./gradlew jacocoTestReport${flavor} -PBUILD_NUMBER=${env.BUILD_NUMBER}" 
-                             }
+                    stage ("Test Coverage ${flavor}") {
+                        sh "runuser --login jenkins -c \'cd $volumeWorkspace && ./gradlew create${flavor}CoverageReport -PBUILD_NUMBER=${env.BUILD_NUMBER}\'"
+                    }
+                }
 
-                            always {
-                                step([$class: 'JacocoPublisher', classPattern: '**/classes', execPattern: '**/**.exec, **/**.ec', sourcePattern: '**/src/main/java'])
-                            }
+                fingerprint ''
+                dockerSlaveImage.stop()
 
-                             stage ("Test Coverage ${flavor}") {
-                             	sh "./gradlew create${flavor}CoverageReport -PBUILD_NUMBER=${env.BUILD_NUMBER}"
-                             }
-                         }
-
-                         fingerprint ''
-                     // }
-                 }
             }
         }
     }

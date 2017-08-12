@@ -59,7 +59,7 @@ Use `git tag` for full release list, or Github.
 
 ## License
 
-This project is licensed the licensing terms at [LICENSE.md](LICENSE.md).
+This project licensed under the terms at [LICENSE.md](LICENSE.md).
 
 ## Acknowledgments
 

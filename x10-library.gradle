@@ -147,13 +147,13 @@ android {
     }
 }
 
-/* Configure dependencies */
+/* Setup when Code Quality tasks run */
 android.libraryVariants.all { variant ->
-    Task task = task("check${variant.name.capitalize()}") {
-        // None
-    }
-    task.dependsOn "findbugs${variant.name.capitalize()}", "checkstyle${variant.name.capitalize()}", "jdepend${variant.name.capitalize()}", "pmd${variant.name.capitalize()}", "jacoco${variant.name.capitalize()}"
-    check.dependsOn task
+    check.dependsOn  "findbugs${variant.name.capitalize()}",
+                    "checkstyle${variant.name.capitalize()}",
+                    "jdepend${variant.name.capitalize()}",
+                    "pmd${variant.name.capitalize()}",
+                    "jacoco${variant.name.capitalize()}"
 }
 // Findbugs
 apply plugin: 'findbugs'

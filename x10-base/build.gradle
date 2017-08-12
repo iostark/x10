@@ -28,7 +28,7 @@ apply from: project.x10LibraryGradle
 dependencies {
     implementation project.dependencyComAndroidSupportAppCompatv7
     implementation project.dependencyComAndroidSupportTestRules
-    implementation project.dependencyGuava // FIXME This library must be removed since x10 does not ship any 3rd party lib
+    api project.dependencyGuava // FIXME This library must be removed since x10 does not ship any 3rd party lib
 
     testImplementation project.dependencyJunit
 }

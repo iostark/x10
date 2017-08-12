@@ -87,7 +87,7 @@ public class PermissionTest extends ActivityInstrumentedTest<PermissionActivity>
             }
 
             @Override
-            public void onPermissionRequestInterrupted(String permission) {
+            public void onPermissionRequestInterrupted(String permissionName) {
                 fail();
             }
 
@@ -140,7 +140,7 @@ public class PermissionTest extends ActivityInstrumentedTest<PermissionActivity>
             }
 
             @Override
-            public void onPermissionRequestInterrupted(String permission) {
+            public void onPermissionRequestInterrupted(String permissionName) {
                 fail();
             }
 
@@ -204,7 +204,7 @@ public class PermissionTest extends ActivityInstrumentedTest<PermissionActivity>
             }
 
             @Override
-            public void onPermissionRequestInterrupted(String permission) {
+            public void onPermissionRequestInterrupted(String permissionName) {
                 fail();
             }
 
@@ -287,7 +287,7 @@ public class PermissionTest extends ActivityInstrumentedTest<PermissionActivity>
             }
 
             @Override
-            public void onPermissionRequestInterrupted(String permission) {
+            public void onPermissionRequestInterrupted(String permissionName) {
                 fail();
             }
 
@@ -346,7 +346,7 @@ public class PermissionTest extends ActivityInstrumentedTest<PermissionActivity>
             }
 
             @Override
-            public void onPermissionRequestInterrupted(String permission) {
+            public void onPermissionRequestInterrupted(String permissionName) {
                 fail();
             }
 
@@ -391,7 +391,7 @@ public class PermissionTest extends ActivityInstrumentedTest<PermissionActivity>
             }
 
             @Override
-            public void onPermissionRequestInterrupted(String permission) {
+            public void onPermissionRequestInterrupted(String permissionName) {
                 fail();
             }
 

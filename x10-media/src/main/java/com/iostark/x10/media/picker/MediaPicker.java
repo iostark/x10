@@ -34,7 +34,12 @@ public class MediaPicker<MediaType> {
     private final Activity activity;
     private MediaSource<MediaType> source;
 
-    // FIXME javadoc
+    /**
+     * Constructor.
+     *
+     * @param activity Activity to pick media from
+     * @since V0_5_0
+     */
     @KeepEntryPoint
     public MediaPicker(final @NonNull Activity activity) {
         this.activity = activity;

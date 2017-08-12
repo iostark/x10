@@ -32,12 +32,12 @@ public class BasePermissionRequestHandler implements PermissionRequestHandler {
 
     /**
      *
-     * @param permission
+     * @param permissionName
      * @since V0_5_0
      */
     @Override
     @SuppressWarnings("PMD.UncommentedEmptyMethodBody")
-    public void onPermissionRequestInterrupted(final String permission) {
+    public void onPermissionRequestInterrupted(final String permissionName) {
 
     }
 

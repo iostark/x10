@@ -24,6 +24,12 @@ public class BitmapEXIFOperation {
 
     private Bitmap bitmap;
 
+   /**
+     * Constructor.
+     *
+     * @param originalBitmap Bitmap to apply exif operation to
+     * @since V0_5_0
+     */
     @KeepEntryPoint
     public BitmapEXIFOperation(final Bitmap originalBitmap) {
         this.bitmap = originalBitmap;

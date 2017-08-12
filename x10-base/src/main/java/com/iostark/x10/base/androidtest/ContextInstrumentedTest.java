@@ -10,8 +10,19 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+/**
+ * Context instrumented test.
+ *
+ * @since V0_5_0
+ */
 @API_Internal
 public class ContextInstrumentedTest {
+    /**
+     * Get instrumented context.
+     *
+     * @return Context instance
+     * @since V0_5_0
+     */
     @SuppressWarnings("PMD.LawOfDemeter")
     public Context getContext() {
         final Context context = InstrumentationRegistry.getContext();
@@ -19,6 +30,12 @@ public class ContextInstrumentedTest {
         return context;
     }
 
+    /**
+     * Get Resources.
+     *
+     * @return Resources
+     * @since V0_5_0
+     */
     @SuppressWarnings("PMD.LawOfDemeter")
     public Resources getResources() {
         final Context context = getContext();
@@ -26,6 +43,11 @@ public class ContextInstrumentedTest {
         return res;
     }
 
+    /**
+     * Example test.
+     *
+     * @since V0_5_0
+     */
     @Test
     public void example() {
         Assert.assertTrue(true);

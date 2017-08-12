@@ -30,11 +30,25 @@ public class DefaultGallerySource<MediaType> extends BaseMediaSource<MediaType> 
     private String expectedMediaPath;
     private int requestedCode;
 
+
+    /**
+     * Constructor.
+     *
+     * @param requestCode Request code, to identify result from the Android OS
+     * @since V0_5_0
+     */
     @KeepEntryPoint
     public DefaultGallerySource(final int requestCode) {
         this.requestedCode = requestCode;
     }
 
+    /**
+     * Constructor.
+     * <p>
+     * The request code is generated automatically
+     *
+     * @since V0_5_0
+     */
     @KeepEntryPoint
     public DefaultGallerySource() {
         this(REQUEST_CODE);
@@ -124,7 +138,14 @@ public class DefaultGallerySource<MediaType> extends BaseMediaSource<MediaType> 
                 requestCode);
     }
 
-
+    /**
+     * Convert a media path to an instance of a media type.
+     *
+     * @param mediaPath Media path
+     * @return Media type instance
+     * @throws ClassCastException If casting a media path to MediaType fails
+     * @since V0_5_0
+     */
     @KeepEntryPoint
     protected MediaType convertMediaPathToMediaType(final String mediaPath) throws ClassCastException {
         try {

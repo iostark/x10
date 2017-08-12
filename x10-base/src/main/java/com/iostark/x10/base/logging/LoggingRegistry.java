@@ -6,6 +6,11 @@ import com.iostark.x10.base.annotation.visibility.KeepEntryPoint;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Logging registry.
+ *
+ * @since V0_5_0
+ */
 @API_Beta
 @KeepEntryPoint
 public final class LoggingRegistry {
@@ -17,18 +22,31 @@ public final class LoggingRegistry {
         defaultAppender = new AndroidAppender();
     }
 
-    private LoggingRegistry() {}
+    private LoggingRegistry() {
+    }
 
+    /**
+     * Set default logging appender.
+     *
+     * @param appender Appender
+     * @since V0_5_0
+     */
     @KeepEntryPoint
     public static void setDefaultAppender(final Appender appender) {
         if (appender == null) {
             currentAppender = new NullAppender();
-        }
-        else {
+        } else {
             currentAppender = appender;
         }
     }
 
+    /**
+     * Get logger by name and create if not existing.
+     *
+     * @param moduleName Logger name
+     * @return Logger instance
+     * @since V0_5_0
+     */
     public static synchronized Logger getLoggerOrCreate(final String moduleName) {
         Logger logger = loggers.get(moduleName);
         if (logger == null) {

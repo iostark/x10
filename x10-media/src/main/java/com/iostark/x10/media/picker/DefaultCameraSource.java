@@ -44,11 +44,25 @@ public class DefaultCameraSource<MediaType> extends BaseMediaSource<MediaType> {
         log = LoggingRegistry.getLoggerOrCreate(ModuleConfig.MODULE_NAME);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param requestCode Request code, to identify result from the Android OS
+     * @since V0_5_0
+     */
     @KeepEntryPoint
     public DefaultCameraSource(final int requestCode) {
         this.requestedCode = requestCode;
     }
 
+
+    /**
+     * Constructor.
+     * <p>
+     * The request code is generated automatically
+     *
+     * @since V0_5_0
+     */
     @KeepEntryPoint
     public DefaultCameraSource() {
         this(REQUEST_CODE);
@@ -159,6 +173,14 @@ public class DefaultCameraSource<MediaType> extends BaseMediaSource<MediaType> {
         // FIXME check media can be retrieved
     }
 
+    /**
+     * Convert a media path to an instance of a media type.
+     *
+     * @param mediaPath Media path
+     * @return Media type instance
+     * @throws ClassCastException If casting a media path to MediaType fails
+     * @since V0_5_0
+     */
     @KeepEntryPoint
     protected MediaType convertMediaPathToMediaType(final String mediaPath) throws ClassCastException {
         try {

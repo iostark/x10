@@ -159,7 +159,7 @@ android.libraryVariants.all { variant ->
 apply plugin: 'findbugs'
 android.libraryVariants.all { variant ->
     task("findbugs${variant.name.capitalize()}", type: FindBugs, dependsOn: "compile${variant.name.capitalize()}Sources") {
-        group = 'Code Quality'
+        group = 'Verification'
         ignoreFailures = false
 
         effort = "max"
@@ -194,7 +194,7 @@ android.libraryVariants.all { variant ->
 apply plugin: 'checkstyle'
 android.libraryVariants.all { variant ->
     task("checkstyle${variant.name.capitalize()}", type: Checkstyle) {
-        group = 'Code Quality'
+        group = 'Verification'
         ignoreFailures = false
         showViolations = true
 
@@ -228,7 +228,7 @@ android.libraryVariants.all { variant ->
 apply plugin: 'jdepend'
 android.libraryVariants.all { variant ->
     task("jdepend${variant.name.capitalize()}", type: JDepend, dependsOn: "compile${variant.name.capitalize()}Sources") {
-        group = 'Code Quality'
+        group = 'Verification'
         classesDir file("${project.buildDir}/intermediates/classes/${variant.name}")
 
         reports {
@@ -249,7 +249,7 @@ android.libraryVariants.all { variant ->
 apply plugin: 'pmd'
 android.libraryVariants.all { variant ->
     task("pmd${variant.name.capitalize()}", type: Pmd) {
-        group = 'Code Quality'
+        group = 'Verification'
         ignoreFailures = true
 
         ruleSets = []
@@ -276,7 +276,7 @@ android.libraryVariants.all { variant ->
 apply plugin: 'jacoco'
 android.libraryVariants.all { variant ->
     task("jacoco${variant.name.capitalize()}", type: JacocoReport) {
-        group = 'Code Quality'
+        group = 'Verification'
         sourceDirectories = files(android.sourceSets.main.java.srcDirs)
         classDirectories = files(android.sourceSets.main.java.srcDirs)
         executionData = fileTree(dir: "$project.projectDir", includes: ['**/*.exec'])

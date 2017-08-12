@@ -314,7 +314,7 @@ task javadoc(type: Javadoc) {
 }
 
 // Prevent Error Prone Programming
-apply plugin: "net.ltgt.errorprone"
+// apply plugin: "net.ltgt.errorprone"
 
 //tasks.withType(JavaCompile) {
 //    options.compilerArgs += [ '-Xep:DeadException:WARN', '-Xep:GuardedByValidator:OFF' ]

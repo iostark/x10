@@ -1,5 +1,7 @@
-### NodeJS ###
 
+# Created by https://www.gitignore.io/api/node
+
+### Node ###
 # Logs
 logs
 *.log
@@ -59,10 +61,5 @@ typings/
 # dotenv environment variables file
 .env
 
-docker
 
-### OSX ###
-*.DS_Store
-
-
-server/.idea
+# End of https://www.gitignore.io/api/node

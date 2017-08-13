@@ -7,6 +7,9 @@ package com.iostark.x10;
 
 import android.support.annotation.NonNull;
 import com.iostark.android.x10.BuildConfig;
+import com.iostark.x10.base.ModuleConfig;
+import com.iostark.x10.base.logging.Logger;
+import com.iostark.x10.base.logging.LoggingRegistry;
 
 /**
  * X10 Library.
@@ -14,7 +17,9 @@ import com.iostark.android.x10.BuildConfig;
  * @since V0_5_0
  */
 public class X10 {
-  private static X10Init data;
+  private static X10Init initData;
+
+  private static Logger log = LoggingRegistry.getLoggerOrCreate(ModuleConfig.MODULE_NAME);
 
   /**
    * Initialize the SDK.
@@ -25,7 +30,9 @@ public class X10 {
    */
   public static void init(
       final @NonNull X10Init data, final X10InitializationCallback sdkInitializationCallback) {
-    X10.data = data;
+    X10.initData = data;
+    boolean isOpenSourceLicense = X10.initData.getLicense() == Licensing.OpenSource;
+    log.i("X10: Using %s license", isOpenSourceLicense ? "OpenSource" : "Commercial");
     sdkInitializationCallback.onSuccess();
   }
 

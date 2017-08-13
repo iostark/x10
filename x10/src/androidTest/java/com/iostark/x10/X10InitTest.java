@@ -7,6 +7,7 @@ package com.iostark.x10;
 
 import android.support.test.runner.AndroidJUnit4;
 import com.iostark.x10.base.androidtest.ActivityInstrumentedTest;
+import com.iostark.x10.base.androidtest.Assertable;
 import com.iostark.x10.base.androidtest.AsyncAssert;
 import java.util.concurrent.TimeUnit;
 import junit.framework.Assert;
@@ -46,7 +47,7 @@ public class X10InitTest extends ActivityInstrumentedTest<X10TestActivity> {
           @Override
           public void onFailure(Exception exception) {
             asyncTest.setAssertion(
-                new AsyncAssert.Assertable() {
+                new Assertable() {
                   @Override
                   public void evaluate() {
                     Assert.fail();
@@ -57,7 +58,7 @@ public class X10InitTest extends ActivityInstrumentedTest<X10TestActivity> {
           @Override
           public void onSuccess() {
             asyncTest.setAssertion(
-                new AsyncAssert.Assertable() {
+                new Assertable() {
                   @Override
                   public void evaluate() {
                     Assert.assertTrue(true);
@@ -66,7 +67,7 @@ public class X10InitTest extends ActivityInstrumentedTest<X10TestActivity> {
           }
         });
 
-    asyncTest.waitForLimitedTimeForResult(10, TimeUnit.SECONDS);
+    asyncTest.waitLimitedTimeForResult(10, TimeUnit.SECONDS);
   }
 
   @Test
@@ -82,7 +83,7 @@ public class X10InitTest extends ActivityInstrumentedTest<X10TestActivity> {
           @Override
           public void onFailure(Exception exception) {
             asyncTest.setAssertion(
-                new AsyncAssert.Assertable() {
+                new Assertable() {
                   @Override
                   public void evaluate() {
                     Assert.fail();
@@ -93,7 +94,7 @@ public class X10InitTest extends ActivityInstrumentedTest<X10TestActivity> {
           @Override
           public void onSuccess() {
             asyncTest.setAssertion(
-                new AsyncAssert.Assertable() {
+                new Assertable() {
                   @Override
                   public void evaluate() {
                     Assert.assertTrue(true);
@@ -102,6 +103,6 @@ public class X10InitTest extends ActivityInstrumentedTest<X10TestActivity> {
           }
         });
 
-    asyncTest.waitForLimitedTimeForResult(10, TimeUnit.SECONDS);
+    asyncTest.waitLimitedTimeForResult(10, TimeUnit.SECONDS);
   }
 }

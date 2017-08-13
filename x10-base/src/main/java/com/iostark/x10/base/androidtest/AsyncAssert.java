@@ -6,9 +6,11 @@
 package com.iostark.x10.base.androidtest;
 
 import android.support.annotation.NonNull;
+
+import junit.framework.Assert;
+
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import junit.framework.Assert;
 
 /**
  * Utility class to assert asynchronously.
@@ -18,16 +20,13 @@ import junit.framework.Assert;
 public class AsyncAssert {
 
   private CountDownLatch latch;
-  private Assertable assertion;
+  private Assertable assertion = new FailAssertable();
 
-  {
-    assertion =
-        new Assertable() {
-          @Override
-          public void evaluate() {
-            Assert.fail("No assertion provided. Call AsyncAssert.setAssertion");
-          }
-        };
+  private static class FailAssertable implements Assertable {
+    @Override
+    public void evaluate() {
+      Assert.fail("No assertion provided. Call AsyncAssert.setAssertion");
+    }
   }
 
   /**
@@ -52,10 +51,10 @@ public class AsyncAssert {
   /**
    * Set the assertion to be executed.
    *
-   * @since V0_5_0
    * @param assertion Assertion to be evaluated
+   * @since V0_5_0
    */
-  public void setAssertion(Assertable assertion) {
+  public void setAssertion(final Assertable assertion) {
     this.assertion = assertion;
     this.latch.countDown();
   }
@@ -63,8 +62,8 @@ public class AsyncAssert {
   /**
    * Wait for an assertion to be specified and then evaluate it.
    *
-   * @since V0_5_0
    * @throws InterruptedException If waiting for assertion is interrupted
+   * @since V0_5_0
    */
   public void waitForResult() throws InterruptedException {
     this.latch.await();
@@ -76,26 +75,14 @@ public class AsyncAssert {
    *
    * @param timeout Timeout in TimeUnit to wait before trying to evaluate the assertion
    * @param timeUnit Time Unit for timeout
-   * @since V0_5_0
    * @throws InterruptedException If waiting for assertion is interrupted
-   */
-  public void waitForLimitedTimeForResult(long timeout, TimeUnit timeUnit)
-      throws InterruptedException {
-    this.latch.await(timeout, timeUnit);
-    this.assertion.evaluate();
-  }
-
-  /**
-   * Some code with an assertion inside.
-   *
    * @since V0_5_0
    */
-  public interface Assertable {
-    /**
-     * Evaluate assertion.
-     *
-     * @since V0_5_0
-     */
-    void evaluate();
+  public void waitLimitedTimeForResult(final long timeout, final TimeUnit timeUnit)
+      throws InterruptedException {
+    final boolean countDownIsZero = this.latch.await(timeout, timeUnit);
+    if (countDownIsZero) {
+      this.assertion.evaluate();
+    }
   }
 }

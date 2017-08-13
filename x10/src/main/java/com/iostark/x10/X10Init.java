@@ -28,6 +28,7 @@ public class X10Init {
   }
 
   private Context context;
+  private Licensing licensing = Licensing.OpenSource;
 
   /**
    * Constructor.
@@ -52,17 +53,18 @@ public class X10Init {
   }
 
   /**
-   * Declare this library is used in a non commercial project. // FIXME Point to dual licensing ?
+   * Declare this library is used in a non commercial project. Read LICENSES.md for details
    *
    * @return The current object
    * @since V0_5_0
    */
   public X10Init useFOSSLicense() {
+    this.licensing = Licensing.OpenSource;
     return this;
   }
 
   /**
-   * Declare this library is used in a commercial project. // FIXME Point to dual licensing ?
+   * Declare this library is used in a commercial project. Read LICENSES.md for details
    *
    * @param licenseData Licencing data
    * @return The current object
@@ -71,6 +73,17 @@ public class X10Init {
   public X10Init useCommercialLicense(@NonNull final String licenseData) {
     Preconditions.checkNotNull(licenseData, "No license data provided");
     // FIXME What to do with the license data ?
+    this.licensing = Licensing.Commercial;
     return this;
+  }
+
+  /**
+   * Get licensing mode.
+   *
+   * @return The licensing mode
+   * @since V0_5_0
+   */
+  public Licensing getLicense() {
+    return this.licensing;
   }
 }
